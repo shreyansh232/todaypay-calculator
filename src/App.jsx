@@ -54,6 +54,66 @@ function App() {
       case '2nd':
         // Toggles between primary and secondary functions (not implemented)
         break;
+      case 'x²':
+        applyPower(2);
+        break;
+      case 'x³':
+        applyPower(3);
+        break;
+      case 'xy':
+        setExpression(expression + '^');
+        break;
+      case 'eˣ':
+        applyExponential(Math.E);
+        break;
+      case '10ˣ':
+        applyExponential(10);
+        break;
+      case 'ln':
+        applyLogarithm(Math.log);
+        break;
+      case 'log₁₀':
+        applyLogarithm(Math.log10);
+        break;
+      case '1/x':
+        applyInverse();
+        break;
+      case '2√x':
+        applyRoot(2);
+        break;
+      case '3√x':
+        applyRoot(3);
+        break;
+      case 'y√x':
+        setExpression(expression + '√');
+        break;
+      case 'Rad':
+        applyRadians();
+        break;
+      case 'sinh':
+        applyHyperbolicFunction(Math.sinh);
+        break;
+      case 'cosh':
+        applyHyperbolicFunction(Math.cosh);
+        break;
+      case 'tanh':
+        applyHyperbolicFunction(Math.tanh);
+        break;
+      case 'π':
+        setExpression(expression + 'π');
+        break;
+      case 'Rand':
+        setExpression(Math.random().toString());
+        break;
+      case '+/-':
+        negateExpression();
+        break;
+      case '%':
+        applyPercentage();
+        break;
+      case 'EE':
+        setExpression(expression + 'EE');
+        break;
       default:
         appendToExpression(value);
         break;
@@ -120,11 +180,103 @@ function App() {
     try {
       const lastChar = expression.slice(-1);
       if (!isNaN(lastChar) || lastChar === ')') {
-        const result = factorial(parseFloat(expression));
+        // If last character is a number or ')', calculate factorial
+        const result = factorial(parseFloat(evaluateExpression(expression)));
         setExpression(result.toString());
       } else {
+        // Otherwise, append '!' to the expression
         setExpression(expression + '!');
       }
+    } catch {
+      setExpression('Error');
+    }
+  };
+
+  const applyTrigonometricFunction = (trigFunction) => {
+    try {
+      const result = trigFunction(parseFloat(evaluateExpression(expression)));
+      setExpression(result.toString());
+    } catch {
+      setExpression('Error');
+    }
+  };
+
+  const applyPower = (power) => {
+    try {
+      const result = Math.pow(parseFloat(evaluateExpression(expression)), power);
+      setExpression(result.toString());
+    } catch {
+      setExpression('Error');
+    }
+  };
+
+  const applyExponential = (base) => {
+    try {
+      const result = Math.pow(base, parseFloat(evaluateExpression(expression)));
+      setExpression(result.toString());
+    } catch {
+      setExpression('Error');
+    }
+  };
+
+  const applyLogarithm = (logFunction) => {
+    try {
+      const result = logFunction(parseFloat(evaluateExpression(expression)));
+      setExpression(result.toString());
+    } catch {
+      setExpression('Error');
+    }
+  };
+
+  const applyInverse = () => {
+    try {
+      const result = 1 / parseFloat(evaluateExpression(expression));
+      setExpression(result.toString());
+    } catch {
+      setExpression('Error');
+    }
+  };
+
+  const applyRoot = (root) => {
+    try {
+      const result = Math.pow(parseFloat(evaluateExpression(expression)), 1 / root);
+      setExpression(result.toString());
+    } catch {
+      setExpression('Error');
+    }
+  };
+
+  const applyRadians = () => {
+    try {
+      const result = parseFloat(evaluateExpression(expression)) * (Math.PI / 180);
+      setExpression(result.toString());
+    } catch {
+      setExpression('Error');
+    }
+  };
+
+  const applyHyperbolicFunction = (hyperbolicFunction) => {
+    try {
+      const result = hyperbolicFunction(parseFloat(evaluateExpression(expression)));
+      setExpression(result.toString());
+    } catch {
+      setExpression('Error');
+    }
+  };
+
+  const negateExpression = () => {
+    try {
+      const result = parseFloat(evaluateExpression(expression)) * -1;
+      setExpression(result.toString());
+    } catch {
+      setExpression('Error');
+    }
+  };
+
+  const applyPercentage = () => {
+    try {
+      const result = parseFloat(evaluateExpression(expression)) / 100;
+      setExpression(result.toString());
     } catch {
       setExpression('Error');
     }
