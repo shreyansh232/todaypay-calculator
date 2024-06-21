@@ -17,7 +17,7 @@ const Calculator = ({ handleButtonClick }) => {
           onClick={() => handleButtonClick(btn)}
           className={`${
             btn === '=' || btn === '÷' || btn === '×' || btn === '-' || btn === '+'
-              ? 'bg-orange-400 text-white'
+              ? 'bg-orange-500 text-white'
               : !isNaN(btn) || btn === '.' // Check if the button is a number or dot
               ? 'bg-gray-600 text-white' // Lighter shade for number buttons
               : 'bg-gray-700 text-white'
