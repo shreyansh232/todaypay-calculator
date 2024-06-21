@@ -2,7 +2,7 @@ export const evaluateExpression = (expr) => {
   const sanitizedExpression = expr
     .replace('÷', '/')
     .replace('×', '*')
-    .replace(/(\d+(\.\d+)?)!/g, (match, n) => factorial(parseFloat(n)))
+    .replace(/(\d+(\.\d+)?)!/g, (_, n) => factorial(parseFloat(n)))
     .replace(/π/g, Math.PI)
     .replace(/e/g, Math.E)
     .replace(/(\d+(\.\d+)?)\^(\d+(\.\d+)?)/g, (match, base, _, exp) => Math.pow(base, exp))
