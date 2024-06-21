@@ -62,20 +62,11 @@ function App() {
     setLastButtonClicked(value);
   };
 
-  const applyTrigonometricFunction = (func) => {
-    try {
-      const result = func(parseFloat(expression));
-      setExpression(result.toString());
-    } catch {
-      setExpression('Error');
-    }
-  };
-
   const evaluateAndSetExpression = () => {
     try {
-      const result = evaluateExpression(expression);
-      checkForConfetti(expression);
+      const result = eval(expression);
       setExpression(result.toString());
+      checkForConfetti(expression);
     } catch {
       setExpression('Error');
     }
@@ -87,7 +78,7 @@ function App() {
 
   const handleMemoryAdd = () => {
     try {
-      const result = evaluateExpression(expression);
+      const result = eval(expression);
       if (!isNaN(result)) {
         setMemoryValue(memoryValue !== null ? memoryValue + parseFloat(result) : parseFloat(result));
       }
@@ -98,7 +89,7 @@ function App() {
 
   const handleMemorySubtract = () => {
     try {
-      const result = evaluateExpression(expression);
+      const result = eval(expression);
       if (!isNaN(result)) {
         setMemoryValue(memoryValue !== null ? memoryValue - parseFloat(result) : -parseFloat(result));
       }
@@ -140,9 +131,9 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen ${theme === 'dark' ? 'dark' : ''} bg-gray-800 flex justify-center items-center`}>
+    <div className={`min-h-screen bg-gray-800 flex justify-center items-center`}>
       {triggerConfetti && <Confetti />}
-      <div className={`bg-gray-800 p-1 border border-gray-700 rounded-lg shadow-lg w-full max-w-4xl ${theme === 'dark' ? 'dark' : ''}`}>
+      <div className={`bg-${theme === 'dark' ? 'gray-800' : 'white'} p-1 border border-gray-700 rounded-lg shadow-lg w-full max-w-4xl ${theme === 'dark' ? 'dark' : ''}`}>
         <div className={`mb-0 flex justify-end items-center bg-gray-800 p-4 font-light rounded-t-lg h-24 ${theme === 'dark' ? 'dark' : ''}`}>
           <input
             className="text-right w-full bg-transparent text-6xl text-white outline-none"
