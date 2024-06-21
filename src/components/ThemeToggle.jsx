@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 function ThemeToggle({ toggleTheme, theme }) {
   return (
@@ -11,10 +10,5 @@ function ThemeToggle({ toggleTheme, theme }) {
   </button>
   );
 }
-
-ThemeToggle.propTypes = {
-  toggleTheme: PropTypes.func.isRequired,
-  theme: PropTypes.string.isRequired,
-};
 
 export default ThemeToggle;
