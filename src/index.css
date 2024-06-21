@@ -7,9 +7,9 @@
 
 body {
   font-family: 'Roboto', sans-serif;
-  @apply bg-gray-900 text-white;
+  /* @apply bg-gray-900 text-white; */
 }
 
 input {
-  caret-color: transparent; /* Hide caret in readonly input */
+  caret-color: transparent; 
 }
