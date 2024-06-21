@@ -6,16 +6,18 @@ import ThemeToggle from './components/ThemeToggle';
 import { evaluateExpression, factorial } from './utils/calculatorUtils';
 
 function App() {
+    // State variables for theme, expression, confetti animation, memory, and last button clicked
   const [theme, setTheme] = useState('dark');
   const [expression, setExpression] = useState('');
   const [triggerConfetti, setTriggerConfetti] = useState(false);
   const [memoryValue, setMemoryValue] = useState(null);
   const [lastButtonClicked, setLastButtonClicked] = useState(null);
 
+  // Function to toggle between dark and light theme
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
-
+  // Function to handle button clicks based on button value
   const handleButtonClick = (value) => {
     switch (value) {
       case 'sin':
@@ -52,7 +54,6 @@ function App() {
         handleMemoryRecall();
         break;
       case '2nd':
-        // Toggles between primary and secondary functions (not implemented)
         break;
       case 'x²':
         applyPower(2);
@@ -60,7 +61,7 @@ function App() {
       case 'x³':
         applyPower(3);
         break;
-      case 'xy':
+      case 'x^y':
         setExpression(expression + '^');
         break;
       case 'eˣ':
