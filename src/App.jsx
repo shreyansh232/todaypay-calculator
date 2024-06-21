@@ -6,18 +6,16 @@ import ThemeToggle from './components/ThemeToggle';
 import { evaluateExpression, factorial } from './utils/calculatorUtils';
 
 function App() {
-    // State variables for theme, expression, confetti animation, memory, and last button clicked
   const [theme, setTheme] = useState('dark');
   const [expression, setExpression] = useState('');
   const [triggerConfetti, setTriggerConfetti] = useState(false);
   const [memoryValue, setMemoryValue] = useState(null);
   const [lastButtonClicked, setLastButtonClicked] = useState(null);
 
-  // Function to toggle between dark and light theme
   const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
+    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
   };
-  // Function to handle button clicks based on button value
+
   const handleButtonClick = (value) => {
     switch (value) {
       case 'sin':
@@ -54,6 +52,7 @@ function App() {
         handleMemoryRecall();
         break;
       case '2nd':
+        // Handle 2nd mode
         break;
       case 'x²':
         applyPower(2);
@@ -141,7 +140,7 @@ function App() {
     try {
       const result = eval(expression);
       if (!isNaN(result)) {
-        setMemoryValue(memoryValue !== null ? memoryValue + parseFloat(result) : parseFloat(result));
+        setMemoryValue((prevMemory) => (prevMemory !== null ? prevMemory + parseFloat(result) : parseFloat(result)));
       }
     } catch {
       setExpression('Error');
@@ -152,7 +151,7 @@ function App() {
     try {
       const result = eval(expression);
       if (!isNaN(result)) {
-        setMemoryValue(memoryValue !== null ? memoryValue - parseFloat(result) : -parseFloat(result));
+        setMemoryValue((prevMemory) => (prevMemory !== null ? prevMemory - parseFloat(result) : -parseFloat(result)));
       }
     } catch {
       setExpression('Error');
@@ -166,7 +165,7 @@ function App() {
   };
 
   const appendToExpression = (value) => {
-    setExpression(expression + value);
+    setExpression((prevExpression) => prevExpression + value);
   };
 
   const checkForConfetti = (expr) => {
@@ -181,11 +180,9 @@ function App() {
     try {
       const lastChar = expression.slice(-1);
       if (!isNaN(lastChar) || lastChar === ')') {
-        // If last character is a number or ')', calculate factorial
         const result = factorial(parseFloat(evaluateExpression(expression)));
         setExpression(result.toString());
       } else {
-        // Otherwise, append '!' to the expression
         setExpression(expression + '!');
       }
     } catch {
@@ -284,12 +281,12 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen bg-gray-800 flex justify-center items-center`}>
+    <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} flex justify-center items-center`}>
       {triggerConfetti && <Confetti />}
       <div className={`bg-${theme === 'dark' ? 'gray-800' : 'white'} p-1 border border-gray-700 rounded-lg shadow-lg w-full max-w-4xl`}>
-        <div className={`mb-0 flex justify-end items-center bg-gray-800 p-4 font-light rounded-t-lg h-24`}>
+        <div className={`mb-0 flex justify-end items-center ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-300'} p-4 font-light rounded-t-lg h-24`}>
           <input
-            className="text-right w-full bg-transparent text-6xl text-white outline-none"
+            className={`text-right w-full bg-transparent text-6xl ${theme === 'dark' ? 'text-white' : 'text-black'} outline-none`}
             type="text"
             value={expression}
             readOnly
