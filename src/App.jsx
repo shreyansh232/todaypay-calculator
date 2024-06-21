@@ -133,7 +133,7 @@ function App() {
   return (
     <div className={`min-h-screen bg-gray-800 flex justify-center items-center`}>
       {triggerConfetti && <Confetti />}
-      <div className={`bg-${theme === 'dark' ? 'gray-800' : 'white'} p-1 border border-gray-700 rounded-lg shadow-lg w-full max-w-4xl ${theme === 'dark' ? 'dark' : ''}`}>
+      <div className={`bg-${theme === 'dark' ? 'gray-800' : 'white'} p-1 border border-gray-700 rounded-lg shadow-lg w-full max-w-4xl`}>
         <div className={`mb-0 flex justify-end items-center bg-gray-800 p-4 font-light rounded-t-lg h-24 ${theme === 'dark' ? 'dark' : ''}`}>
           <input
             className="text-right w-full bg-transparent text-6xl text-white outline-none"
