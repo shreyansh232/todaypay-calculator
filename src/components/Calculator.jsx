@@ -1,5 +1,3 @@
-// Calculator.jsx
-
 import React from 'react';
 
 const buttons = [

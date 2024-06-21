@@ -1,6 +1,3 @@
-// calculatorUtils.js
-
-// Evaluate mathematical expressions
 export const evaluateExpression = (expr) => {
   const sanitizedExpression = expr
     .replace('÷', '/')
