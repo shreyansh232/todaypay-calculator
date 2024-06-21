@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './index.css';
+import ConfettiExplosion from 'react-confetti-explosion';
 
 const buttons = [
   ['(', ')', 'mc', 'm+', 'm-', 'mr', 'C', '+/-', '%', '÷'],
@@ -12,6 +13,7 @@ const buttons = [
 function App() {
   const [theme, setTheme] = useState('dark');
   const [expression, setExpression] = useState('');
+  const [triggerConfetti, setTriggerConfetti] = useState(false);
 
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
@@ -23,7 +25,9 @@ function App() {
       setExpression('');
     } else if (value === '=') {
       try {
-        setExpression(eval(expression.replace('÷', '/').replace('×', '*')).toString());
+        const result = evaluateExpression(expression);
+        checkForConfetti(expression);
+        setExpression(result);
       } catch {
         setExpression('Error');
       }
@@ -32,12 +36,39 @@ function App() {
     }
   };
 
+  const evaluateExpression = (expr) => {
+    const sanitizedExpression = expr
+      .replace('÷', '/')
+      .replace('×', '*')
+      .replace('π', Math.PI)
+      .replace(/(\d+(\.\d+)?)!/g, (match, n) => factorial(parseFloat(n)))
+      .replace(/(\d+(\.\d+)?)\^(\d+(\.\d+)?)/g, (match, base, _, exp) => Math.pow(base, exp))
+      .replace(/(\d+(\.\d+)?)([sct])\((\d+(\.\d+)?)\)/g, (match, num, _, func, angle) => Math[func](angle));
+
+    return eval(sanitizedExpression).toString();
+  };
+
+  const factorial = (n) => {
+    if (n < 0) return 'NaN';
+    if (n === 0 || n === 1) return 1;
+    return n * factorial(n - 1);
+  };
+
+  const checkForConfetti = (expr) => {
+    const operands = expr.match(/(\d+(\.\d+)?)/g);
+    if (operands && operands.includes('5') && operands.includes('6')) {
+      setTriggerConfetti(true);
+      setTimeout(() => setTriggerConfetti(false), 4000);
+    }
+  };
+
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'dark' : ''} bg-gray-800 flex justify-center items-center`}>
-      <div className="bg-gray-800 p-1 rounded-lg shadow-2xl w-full max-w-4xl border border-black">
-        <div className="mb-0 flex justify-end items-center bg-gray-800 p-4 rounded-t-lg h-24">
+      {triggerConfetti && <ConfettiExplosion />}
+      <div className="bg-gray-800 p-1 border border-gray-700 rounded-lg shadow-lg w-full max-w-4xl">
+        <div className="mb-0 flex justify-end items-center bg-gray-800 p-4 font-light rounded-t-lg h-24">
           <input
-            className="text-right w-full bg-transparent font-light text-6xl text-white outline-none"
+            className="text-right w-full bg-transparent text-6xl text-white outline-none"
             type="text"
             value={expression}
             readOnly
@@ -57,7 +88,9 @@ function App() {
               {btn}
             </button>
           ))}
+          
         </div>
+        
       </div>
     </div>
   );
