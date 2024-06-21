@@ -3,7 +3,7 @@ import './index.css';
 import Confetti from './components/Confetti';
 import Calculator from './components/Calculator';
 import ThemeToggle from './components/ThemeToggle';
-import { evaluateExpression, factorial, calculateResult} from './utils/calculatorUtils';
+import { evaluateExpression, factorial } from './utils/calculatorUtils';
 
 function App() {
   const [theme, setTheme] = useState('dark');
@@ -62,29 +62,18 @@ function App() {
     setLastButtonClicked(value);
   };
 
-const applyTrigonometricFunction = (func) => {
-  try {
-    const num = parseFloat(expression);
-    if (!isNaN(num)) {
-      const result = func(num);
-      if (!isNaN(result)) {
-        setExpression(result.toString());
-      } else {
-        setExpression('Error: Invalid input');
-      }
-    } else {
-      setExpression('Error: Invalid input');
+  const applyTrigonometricFunction = (func) => {
+    try {
+      const result = func(parseFloat(expression));
+      setExpression(result.toString());
+    } catch {
+      setExpression('Error');
     }
-  } catch (error) {
-    console.error('Error applying trigonometric function:', error);
-    setExpression('Error: Calculation error');
-  }
-};
-
+  };
 
   const evaluateAndSetExpression = () => {
     try {
-      const result = calculateResult(expression);
+      const result = evaluateExpression(expression);
       checkForConfetti(expression);
       setExpression(result.toString());
     } catch {
@@ -98,7 +87,7 @@ const applyTrigonometricFunction = (func) => {
 
   const handleMemoryAdd = () => {
     try {
-      const result = calculateResult(expression);
+      const result = evaluateExpression(expression);
       if (!isNaN(result)) {
         setMemoryValue(memoryValue !== null ? memoryValue + parseFloat(result) : parseFloat(result));
       }
@@ -109,7 +98,7 @@ const applyTrigonometricFunction = (func) => {
 
   const handleMemorySubtract = () => {
     try {
-      const result = calculateResult(expression);
+      const result = evaluateExpression(expression);
       if (!isNaN(result)) {
         setMemoryValue(memoryValue !== null ? memoryValue - parseFloat(result) : -parseFloat(result));
       }
