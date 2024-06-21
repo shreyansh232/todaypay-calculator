@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
 import './index.css';
-import ConfettiExplosion from 'react-confetti-explosion';
-
-const buttons = [
-  ['(', ')', 'mc', 'm+', 'm-', 'mr', 'C', '+/-', '%', '÷'],
-  ['2nd', 'x²', 'x³', 'xy', 'eˣ', '10ˣ', '7', '8', '9', '×'],
-  ['1/x', '2√x', '3√x', 'y√x', 'ln', 'log₁₀', '4', '5', '6', '-'],
-  ['x!', 'sin', 'cos', 'tan', 'e', 'EE', '1', '2', '3', '+'],
-  ['Rad', 'sinh', 'cosh', 'tanh', 'π', 'Rand', '0', '.', '=']
-];
+import Confetti from './components/Confetti';
+import Calculator from './components/Calculator';
+import ThemeToggle from './components/ThemeToggle';
+import { evaluateExpression, factorial } from './utils/calculatorUtils';
 
 function App() {
   const [theme, setTheme] = useState('dark');
@@ -19,36 +14,30 @@ function App() {
 
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
-    document.documentElement.classList.toggle('dark');
-    document.body.classList.toggle('dark'); 
   };
 
   const handleButtonClick = (value) => {
     switch (value) {
+      case 'sin':
+        applyTrigonometricFunction(Math.sin);
+        break;
+      case 'cos':
+        applyTrigonometricFunction(Math.cos);
+        break;
+      case 'tan':
+        applyTrigonometricFunction(Math.tan);
+        break;
+      case 'e':
+        setExpression(expression + 'e');
+        break;
+      case 'x!':
+        applyFactorial();
+        break;
       case 'C':
         setExpression('');
         break;
       case '=':
-        try {
-          const result = evaluateExpression(expression);
-          checkForConfetti(expression);
-          setExpression(result);
-        } catch {
-          setExpression('Error');
-        }
-        break;
-      case 'x!':
-        try {
-          const lastChar = expression.slice(-1);
-          if (!isNaN(lastChar) || lastChar === ')') {
-            const result = evaluateExpression(expression + '!');
-            setExpression(result);
-          } else {
-            setExpression(expression + '!');
-          }
-        } catch {
-          setExpression('Error');
-        }
+        evaluateAndSetExpression();
         break;
       case 'mc':
         handleMemoryClear();
@@ -62,34 +51,45 @@ function App() {
       case 'mr':
         handleMemoryRecall();
         break;
+      case '2nd':
+        // Toggles between primary and secondary functions (not implemented)
+        break;
       default:
-        setExpression(expression + value);
+        appendToExpression(value);
         break;
     }
+
     setLastButtonClicked(value);
   };
 
-  const evaluateExpression = (expr) => {
-    const sanitizedExpression = expr
-      .replace('÷', '/')
-      .replace('×', '*')
-      .replace(/(\d+(\.\d+)?)!/g, (match, n) => factorial(parseFloat(n)))
-      .replace(/π/g, Math.PI)
-      .replace(/e/g, Math.E)
-      .replace(/(\d+(\.\d+)?)\^(\d+(\.\d+)?)/g, (match, base, _, exp) => Math.pow(base, exp))
-      .replace(/(\d+(\.\d+)?)([sct])\((\d+(\.\d+)?)\)/g, (match, num, _, func, angle) => Math[func](angle));
-
-    return eval(sanitizedExpression).toString();
-  };
-
-  const factorial = (n) => {
-    if (n < 0) return 'NaN';
-    if (n === 0 || n === 1) return 1;
-    let result = 1;
-    for (let i = 2; i <= n; i++) {
-      result *= i;
+  const applyTrigonometricFunction = (func) => {
+    try {
+      const num = parseFloat(expression);
+      if (!isNaN(num)) {
+        const result = func(num);
+        if (!isNaN(result)) {
+          setExpression(result.toString());
+        } else {
+          setExpression('Error: Invalid input');
+        }
+      } else {
+        setExpression('Error: Invalid input');
+      }
+    } catch (error) {
+      console.error('Error applying trigonometric function:', error);
+      setExpression('Error: Calculation error');
     }
-    return result;
+  };
+  
+
+  const evaluateAndSetExpression = () => {
+    try {
+      const result = evaluateExpression(expression);
+      checkForConfetti(expression);
+      setExpression(result.toString());
+    } catch {
+      setExpression('Error');
+    }
   };
 
   const handleMemoryClear = () => {
@@ -124,6 +124,10 @@ function App() {
     }
   };
 
+  const appendToExpression = (value) => {
+    setExpression(expression + value);
+  };
+
   const checkForConfetti = (expr) => {
     const operands = expr.match(/(\d+(\.\d+)?)/g);
     if (operands && operands.includes('5') && operands.includes('6')) {
@@ -132,11 +136,25 @@ function App() {
     }
   };
 
+  const applyFactorial = () => {
+    try {
+      const lastChar = expression.slice(-1);
+      if (!isNaN(lastChar) || lastChar === ')') {
+        const result = factorial(parseFloat(expression));
+        setExpression(result.toString());
+      } else {
+        setExpression(expression + '!');
+      }
+    } catch {
+      setExpression('Error');
+    }
+  };
+
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'dark' : ''} bg-gray-800 flex justify-center items-center`}>
-      {triggerConfetti && <ConfettiExplosion />}
-      <div className="bg-gray-800 p-1 border border-gray-700 rounded-lg shadow-lg w-full max-w-4xl">
-        <div className="mb-0 flex justify-end items-center bg-gray-800 p-4 font-light rounded-t-lg h-24">
+      {triggerConfetti && <Confetti />}
+      <div className={`bg-gray-800 p-1 border border-gray-700 rounded-lg shadow-lg w-full max-w-4xl ${theme === 'dark' ? 'dark' : ''}`}>
+        <div className={`mb-0 flex justify-end items-center bg-gray-800 p-4 font-light rounded-t-lg h-24 ${theme === 'dark' ? 'dark' : ''}`}>
           <input
             className="text-right w-full bg-transparent text-6xl text-white outline-none"
             type="text"
@@ -144,27 +162,8 @@ function App() {
             readOnly
           />
         </div>
-        <div className="grid grid-cols-10 gap-0.5">
-          {buttons.flat().map((btn, index) => (
-            <button
-              key={index}
-              onClick={() => handleButtonClick(btn)}
-              className={`${
-                btn === '=' || btn === '÷' || btn === '×' || btn === '-' || btn === '+'
-                  ? 'bg-orange-500 text-white'
-                  : 'bg-gray-700 text-white'
-              } font-light py-4 text-xl h-16 ${btn === '0' ? 'col-span-2' : ''}`}
-            >
-              {btn}
-            </button>
-          ))}
-        </div>
-        <button
-          className={`absolute bottom-48 right-1/2 transform translate-x-1/2 bg-gray-700 text-white px-4 py-2 rounded-md border border-gray-600`}
-          onClick={toggleTheme}
-        >
-          {theme === 'dark' ? 'Light' : 'Dark'} Mode
-        </button>
+        <Calculator handleButtonClick={handleButtonClick} theme={theme} />
+        <ThemeToggle toggleTheme={toggleTheme} theme={theme} />
       </div>
     </div>
   );

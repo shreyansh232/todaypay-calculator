@@ -22,7 +22,7 @@ This is a scientific calculator application built using React and Tailwind CSS. 
 1. Clone the repository:
 
 ```sh
-git clone https://github.com/your-username/todaypay-calculator.git
+git clone https://github.com/shreyansh232/todaypay-calculator.git
 cd scientific-calculator
 ```
 
