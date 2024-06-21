@@ -281,7 +281,7 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} flex justify-center items-center`}>
+    <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'} flex justify-center items-center`}>
       {triggerConfetti && <Confetti />}
       <div className={`bg-${theme === 'dark' ? 'gray-800' : 'white'} p-1 border border-gray-700 rounded-lg shadow-2xl w-full max-w-5xl`}>
         <div className={`mb-0 flex justify-end items-center ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-300'} p-4 font-light rounded-t-lg h-24`}>
